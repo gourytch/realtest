@@ -98,6 +98,17 @@ realtest.register_flower("flowers:viola", {
 	texture = "flowers_viola.png",
 })
 
+realtest.register_flower("flowers:tansy", {
+	description = "Tansy",
+	texture = "flowers_tansy.png",
+	extra_definition_items = {
+		selection_box = {
+			type = "fixed",
+			fixed = {-0.3, -0.5, -0.3, 0.3, 0.5, 0.3}
+		},
+	},
+})
+
 realtest.register_flower("flowers:grass", {
 	description = "Grass",
 	texture = "flowers_grass.png",
@@ -124,4 +135,65 @@ realtest.register_flower("flowers:grass", {
 		groups = {dig_immediate=3,dropping_node=1},
 	},
 	
+})
+
+minetest.register_craft({
+	recipe = {
+		{"default:clay_lump","","default:clay_lump"},
+		{"default:clay_lump","","default:clay_lump"},
+		{"default:clay_lump","default:clay_lump","default:clay_lump"},
+	},
+	output = "flowers:pot_unroasted",
+})
+
+minetest.register_node("flowers:pot_unroasted", {
+	description = "Unroasted Pot",
+	tiles = {"flowers_pot_unroasted_bottom.png^flowers_pot_unroasted_top.png","flowers_pot_unroasted_bottom.png","flowers_pot_unroasted.png"},
+	drawtype = "nodebox",
+	paramtype = "light",
+	node_box = {
+		type = "fixed",
+		fixed = {
+			{-0.5,-0.5,-0.5,0.5,-6/16,0.5},
+			{-0.5,-6/16,-0.5,0.5,0.5,-6/16},
+			{-0.5,-6/16,-0.5,-6/16,0.5,0.5},
+			{-0.5,-6/16,6/16,0.5,0.5,0.5},
+			{6/16,-6/16,-0.5,0.5,0.5,0.5},
+		},
+	},
+})
+
+minetest.register_craft({
+	type = "cooking",
+	recipe = "flowers:pot_unroasted",
+	output = "flowers:pot"
+})
+
+minetest.register_node("flowers:pot", {
+	description = "Pot",
+	tiles = {"flowers_pot_bottom.png^flowers_pot_top.png","flowers_pot_bottom.png","flowers_pot.png"},
+	drawtype = "nodebox",
+	paramtype = "light",
+	node_box = {
+		type = "fixed",
+		fixed = {
+			{-0.5,-0.5,-0.5,0.5,-6/16,0.5},
+			{-0.5,-6/16,-0.5,0.5,0.5,-6/16},
+			{-0.5,-6/16,-0.5,-6/16,0.5,0.5},
+			{-0.5,-6/16,6/16,0.5,0.5,0.5},
+			{6/16,-6/16,-0.5,0.5,0.5,0.5},
+		},
+	},
+})
+
+minetest.register_craft({
+	recipe = {{"default:dirt"},{"flowers:pot"}},
+	output = "flowers:pot_with_dirt",
+})
+
+minetest.register_node("flowers:pot_with_dirt", {
+	description = "Pot",
+	tiles = {"default_dirt.png^flowers_pot_top.png","flowers_pot_bottom.png","flowers_pot.png"},
+	drawtype = "nodebox",
+	paramtype = "light",
 })
