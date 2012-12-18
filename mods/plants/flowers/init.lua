@@ -1,8 +1,3 @@
---description; name; reproduction: texture; number_of_flowers, interval, chance, radius; death: interval, chance; light; grounds;
-local flowers = {
-	{"Camomile", "camomile", "flowers_camomile.png", 2, 1, 10, 5, 1, 10, 8, {"default:dirt", "default:dirt_with_grass", "default:dirt_with_clay", "default:dirt_with_grass_and_clay"}}
-}
-
 realtest.registered_flowers = {}
 realtest.registered_flowers_list = {}
 function realtest.register_flower(name, FlowerDef)
@@ -81,4 +76,52 @@ end
 realtest.register_flower("flowers:camomile", {
 	description = "Camomile",
 	texture = "flowers_camomile.png",
+})
+
+realtest.register_flower("flowers:dandelion", {
+	description = "Dandelion",
+	texture = "flowers_dandelion.png",
+})
+
+realtest.register_flower("flowers:rose", {
+	description = "Rose",
+	texture = "flowers_rose.png",
+})
+
+realtest.register_flower("flowers:tulip", {
+	description = "Tulip",
+	texture = "flowers_tulip.png",
+})
+
+realtest.register_flower("flowers:viola", {
+	description = "Viola",
+	texture = "flowers_viola.png",
+})
+
+realtest.register_flower("flowers:grass", {
+	description = "Grass",
+	texture = "flowers_grass.png",
+	grow_light = 4,
+	grow_interval = 500,
+	grow_chance = 3,
+	death_cause = 
+		function(flowers_around)
+			if math.random(100) == 1 then
+				return true
+			end
+			return false
+		end,
+	grow_cause = 
+		function(flowers_around)
+			return true
+		end,
+	extra_definition_items = {
+		selection_box = {
+			type = "fixed",
+			fixed = {-0.5,-0.5,-0.5,0.5,0.5,0.5}
+		},
+		drop = "",
+		groups = {dig_immediate=3,dropping_node=1},
+	},
+	
 })
