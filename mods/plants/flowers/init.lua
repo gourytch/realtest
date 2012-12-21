@@ -41,7 +41,8 @@ function realtest.register_flower(name, FlowerDef)
 		selection_box = {
 			type = "fixed",
 			fixed = {-0.2, -0.5, -0.2, 0.2, 0.2, 0.2}
-		}
+		},
+		sounds = {dug = {name="default_dig_crumbly", gain=0.4}},
 	}
 	for n, item in pairs(flower.extra_definition_items) do
 		NodeDef[n] = item
@@ -131,12 +132,11 @@ realtest.register_flower("flowers:grass", {
 	extra_definition_items = {
 		selection_box = {
 			type = "fixed",
-			fixed = {-0.5,-0.5,-0.5,0.5,0.5,0.5}
+			fixed = {-0.4,-0.5,-0.4,0.4,0.4,0.4}
 		},
 		drop = "",
 		groups = {dig_immediate=3,dropping_node=1},
 	},
-	
 })
 
 minetest.register_craft({
@@ -250,16 +250,16 @@ end
 minetest.register_on_generated(function(minp, maxp, seed)
 	local pr = PseudoRandom(seed)
 	local n = 1
+	if pr:next(1, 3) == 1 then
+		n = n + 1
+	end
 	if pr:next(1, 5) == 1 then
 		n = n + 1
 	end
-	if pr:next(1, 10) == 1 then
-		n = n + 1
-	end
 	for i = 1, n do
-		generate(realtest.registered_flowers_list[pr:next(1,#realtest.registered_flowers_list)], minp, maxp, seed, 1/8/2, 1) 
+		generate(realtest.registered_flowers_list[pr:next(1,#realtest.registered_flowers_list)], minp, maxp, seed) 
 	end
 	if realtest.registered_flowers_list["flowers:grass"] then
-		generate("flowers:grass", minp, maxp, seed, 1/8/2, 1)
+		generate("flowers:grass", minp, maxp, seed)
 	end
 end)
