@@ -1,7 +1,5 @@
 trees = {}
 
-dofile(minetest.get_modpath("trees").."/leavesgen.lua")
-
 local function generate(tree, minp, maxp, seed)
 	local perlin1 = minetest.env:get_perlin(329, 3, 0.6, 100)
 	-- Assume X and Z lengths are equal
