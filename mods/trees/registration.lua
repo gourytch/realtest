@@ -1,20 +1,19 @@
 realtest.registered_trees = {}
 realtest.registered_trees_list = {}
 function realtest.register_tree(name, TreeDef)
-	if not TreeDef.textures then
+	if not (TreeDef.textures or TreeDef.treedef) then
 		return
 	end
 	local tree = {
 		name = name,
 		description = TreeDef.description or "",
 		grounds = TreeDef.grounds or {"default:dirt","default:dirt_with_grass"},
-		leaves = TreeDef.leaves or {},
-		height = TreeDef.height or function() return 10 end,
 		radius = TreeDef.radius or 5,
 		textures = TreeDef.textures or {},
 		grow_interval = TreeDef.grow_interval or 60,
 		grow_chance = TreeDef.grow_chance or 20,
-		grow_light = TreeDef.grow_light or 8
+		grow_light = TreeDef.grow_light or 8,
+		treedef = TreeDef.treedef
 	}
 	realtest.registered_trees[name] = tree
 	table.insert(realtest.registered_trees_list, tree.name)
@@ -56,24 +55,10 @@ function realtest.register_tree(name, TreeDef)
 		tiles = tree.textures.trunk,
 		inventory_image = tree.textures.log,
 		wield_image = tree.textures.log,
-		groups = {log=1,snappy=1,choppy=2,flammable=2,dropping_node=1,drop_on_dig=1},
+		groups = {log=1,snappy=1,choppy=2,flammable=2,drop_on_dig=1},
 		sounds = default.node_sound_wood_defaults(),
 		drop = tree.name.."_plank 4",
 		drop_on_dropping = tree.name.."_log",
-		drawtype = "nodebox",
-		paramtype = "light",
-		node_box = {
-			type = "fixed",
-			fixed = {
-				{-0.4,-0.5,-0.4,0.4,0.5,0.4},
-			},
-		},
-		selection_box = {
-			type = "fixed",
-			fixed = {
-				{-0.4,-0.5,-0.4,0.4,0.5,0.4},
-			},
-		},
 	})
 	
 	minetest.register_node(tree.name.."_leaves", {
@@ -166,49 +151,6 @@ function realtest.register_tree(name, TreeDef)
 		groups = {tree=1,snappy=1,choppy=2,flammable=2,dropping_node=1,drop_on_dig=1},
 		sounds = default.node_sound_wood_defaults(),
 		drop = tree.name.."_log",
-		drawtype = "nodebox",
-		paramtype = "light",
-		node_box = {
-			type = "fixed",
-			fixed = {
-				{-0.4,-0.5,-0.4,0.4,0.5,0.4},
-			},
-		},
-		selection_box = {
-			type = "fixed",
-			fixed = {
-				{-0.4,-0.5,-0.4,0.4,0.5,0.4},
-			},
-		},
-	})
-	
-	minetest.register_node(tree.name.."_trunk_top", {
-		tiles = tree.textures.trunk,
-		groups = {tree=1,snappy=1,choppy=2,flammable=2,dropping_node=1,drop_on_dig=1},
-		sounds = default.node_sound_wood_defaults(),
-		drop = tree.name.."_log",
-		drawtype = "nodebox",
-		paramtype = "light",
-		node_box = {
-			type = "fixed",
-			fixed = {
-				{-0.4,-0.5,-0.4,0.4,0.5,0.4},
-			},
-		},
-		selection_box = {
-			type = "fixed",
-			fixed = {
-				{-0.4,-0.5,-0.4,0.4,0.5,0.4},
-			},
-		},
-		after_dig_node = function(pos, oldnode, oldmetadata, digger)
-			for i = 1,#tree.leaves do
-				local p = {x=pos.x+tree.leaves[i][1], y=pos.y+tree.leaves[i][2], z=pos.z+tree.leaves[i][3]}
-				if minetest.env:get_node(p).name == tree.name.."_leaves" then
-					minetest.env:dig_node(p)
-				end
-			end
-		end,
 	})
 	
 	minetest.register_node(tree.name.."_stair", {
@@ -371,7 +313,7 @@ function realtest.register_tree(name, TreeDef)
 			end
 			return count
 		end,
-	allow_metadata_inventory_put = function(pos, listname, index, stack, player)
+		allow_metadata_inventory_put = function(pos, listname, index, stack, player)
 			local meta = minetest.env:get_meta(pos)
 			if not has_locked_chest_privilege(meta, player) then
 				minetest.log("action", player:get_player_name()..
@@ -382,7 +324,7 @@ function realtest.register_tree(name, TreeDef)
 			end
 			return stack:get_count()
 		end,
-	allow_metadata_inventory_take = function(pos, listname, index, stack, player)
+		allow_metadata_inventory_take = function(pos, listname, index, stack, player)
 			local meta = minetest.env:get_meta(pos)
 			if not has_locked_chest_privilege(meta, player) then
 				minetest.log("action", player:get_player_name()..
@@ -397,11 +339,11 @@ function realtest.register_tree(name, TreeDef)
 			minetest.log("action", player:get_player_name()..
 					" moves stuff in locked chest at "..minetest.pos_to_string(pos))
 		end,
-	on_metadata_inventory_put = function(pos, listname, index, stack, player)
+		on_metadata_inventory_put = function(pos, listname, index, stack, player)
 			minetest.log("action", player:get_player_name()..
 					" moves stuff to locked chest at "..minetest.pos_to_string(pos))
 		end,
-	on_metadata_inventory_take = function(pos, listname, index, stack, player)
+		on_metadata_inventory_take = function(pos, listname, index, stack, player)
 			minetest.log("action", player:get_player_name()..
 					" takes stuff from locked chest at "..minetest.pos_to_string(pos))
 		end,
