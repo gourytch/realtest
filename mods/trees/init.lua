@@ -27,7 +27,10 @@ local function generate(tree, minp, maxp, seed)
 					end
 				end
 				if ground_y then
-					--trees.make_tree({x=x,y=ground_y+1,z=z}, tree)
+					if table.contains(tree.grounds,minetest.env:get_node({x=x,y=ground_y,z=z}).name) and
+							not minetest.env:find_node_near({x=x,y=ground_y,z=z}, tree.radius, tree.treedef.leaves) then
+						minetest.env:spawn_tree({x=x,y=ground_y+1,z=z},tree.treedef)--trees.make_tree({x=x,y=ground_y+1,z=z}, tree)
+					end
 				end
 			end
 		end
@@ -50,7 +53,9 @@ minetest.register_on_generated(function(minp, maxp, seed)
 	end
 	if n > 0 then
 		for i = 1, n do
-			generate(realtest.registered_trees_list[pr:next(1,#realtest.registered_trees_list)], minp, maxp, seed, 1/8/2, 1)
+			local n = pr:next(1,#realtest.registered_trees_list)
+			local t = realtest.registered_trees_list[n]
+			generate(realtest.registered_trees[t], minp, maxp, seed, 1/8/2, 1)
 		end
 	end
 end)

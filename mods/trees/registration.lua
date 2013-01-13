@@ -4,6 +4,9 @@ function realtest.register_tree(name, TreeDef)
 	if not (TreeDef.textures or TreeDef.treedef) then
 		return
 	end
+	local td = TreeDef.treedef
+	td.leaves = name.."_leaves"
+	td.trunk = name.."_trunk"
 	local tree = {
 		name = name,
 		description = TreeDef.description or "",
@@ -13,7 +16,7 @@ function realtest.register_tree(name, TreeDef)
 		grow_interval = TreeDef.grow_interval or 60,
 		grow_chance = TreeDef.grow_chance or 20,
 		grow_light = TreeDef.grow_light or 8,
-		treedef = TreeDef.treedef
+		treedef = td
 	}
 	realtest.registered_trees[name] = tree
 	table.insert(realtest.registered_trees_list, tree.name)
@@ -530,7 +533,40 @@ minetest.after(0, function()
 	end
 end)
 
-realtest.register_tree("trees:ash", {
+realtest.register_tree("trees:appletree", {
+	description = "Apple-Tree",
+	textures = {
+		trunk = {"trees_ash_trunk_top.png", "trees_ash_trunk_top.png", "trees_ash_trunk.png"},
+		leaves = "trees_ash_leaves.png",
+		autumn_leaves = "trees_ash_autumn_leaves.png",
+		planks = "trees_ash_planks.png",
+		stick = "trees_ash_stick.png",
+		sapling = "trees_ash_sapling.png",
+		log = "trees_ash_log.png",
+		plank = "trees_ash_plank.png",
+		ladder = "trees_ash_ladder.png",
+		door_inventory = "trees_ash_door_inventory.png",
+		door_top = "trees_ash_door_top.png",
+		door_bottom = "trees_ash_door_bottom.png",
+		chest = {"trees_ash_chest_top.png", "trees_ash_chest_top.png", "trees_ash_chest_side.png",
+				"trees_ash_chest_side.png", "trees_ash_chest_side.png", "trees_ash_chest_front.png"},
+		locked_chest = {"trees_ash_chest_top.png", "trees_ash_chest_top.png", "trees_ash_chest_side.png",
+			"trees_ash_chest_side.png", "trees_ash_chest_side.png", "trees_ash_chest_lock.png"},
+	},
+	treedef = {
+		axiom="FFFFFAFFBF",
+		rules_a="[&&&FFFFF&&FFFF][&&&++++FFFFF&&FFFF][&&&----FFFFF&&FFFF]",
+		rules_b="[&&&++FFFFF&&FFFF][&&&--FFFFF&&FFFF][&&&------FFFFF&&FFFF]",
+		angle=30,
+		iterations=2,
+		random_level=0,
+		trunk_type="single",
+		thin_branches=true,
+	},
+	radius = 10,
+})
+
+--[[realtest.register_tree("trees:ash", {
 	description = "Ash",
 	leaves = trees.gen_lists.ash,
 	height = function()
@@ -676,4 +712,4 @@ realtest.register_tree("trees:pine", {
 		locked_chest = {"trees_pine_chest_top.png", "trees_pine_chest_top.png", "trees_pine_chest_side.png",
 			"trees_pine_chest_side.png", "trees_pine_chest_side.png", "trees_pine_chest_lock.png"},
 	}
-})
+})]]
